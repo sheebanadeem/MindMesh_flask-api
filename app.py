@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 import pickle
 
 model = pickle.load(open("Model/finalized_model.sav", 'rb'))
@@ -6,6 +7,8 @@ model = pickle.load(open("Model/finalized_model.sav", 'rb'))
 NUM = pickle.load(open("Model/Numeric_model.sav", 'rb'))
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 def prediction(Value):
     y_pred = model.predict([Value])
@@ -13,10 +16,12 @@ def prediction(Value):
     return int(Predicted_error)
 
 @app.route('/',methods=['GET'])
+@cross_origin()
 def index():
     return "Flask is up and running"    
 
-@app.route('/api', methods=['GET','POST'])
+@app.route('/api', methods=['POST'])
+@cross_origin()
 def predict():
     region = {'southwest': 3, 'southeast': 2, 'northwest': 1, 'northeast': 0}
     smoker = {'Yes': 1, 'No': 0}
