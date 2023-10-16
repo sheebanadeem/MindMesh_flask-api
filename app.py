@@ -20,7 +20,7 @@ def prediction(Value):
 def index():
     return "Flask is up and running"    
 
-@app.route('/api', methods=['POST'])
+@app.route('/api', methods=['GET'])
 @cross_origin()
 def predict():
     region = {'southwest': 3, 'southeast': 2, 'northwest': 1, 'northeast': 0}
