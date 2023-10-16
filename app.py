@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import pickle
 
@@ -26,12 +26,13 @@ def predict():
     region = {'southwest': 3, 'southeast': 2, 'northwest': 1, 'northeast': 0}
     smoker = {'Yes': 1, 'No': 0}
     Gen = {'Male': 1, 'Female': 0}
-    Age = request.values.get('age', type=int)
-    Gender = request.values.get('gender', type=str)
-    BMI = request.values.get('bmi', type=float)
-    Child = request.values.get('children', type=int)
-    Smoker = request.values.get('smoker', type=str)
-    Region = request.values.get('region', type=str)
+    data = request.get_json()
+    Age = data['age']
+    Gender = data['gender']
+    BMI = data['bmi']
+    Child = data['children']
+    Smoker = data['smoker']
+    Region = data['region']
     bmi = NUM.transform([[BMI]])
     print(type(Age), type(Gender), type(BMI), type(Child), type(Smoker), type(Region))
     Value = [Gen[Gender], smoker[Smoker], region[Region], Age, float(bmi[0]), Child ]
@@ -39,5 +40,4 @@ def predict():
         cost = prediction(Value)
         return str(cost)
     except Exception as e:
-        return e
-        
+        return e         
